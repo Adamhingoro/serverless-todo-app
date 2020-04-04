@@ -1,3 +1,5 @@
+org: adamabdulshakoor
+app: serverless-todo-app-app
 service:
   name: serverless-todo-app
 
@@ -16,6 +18,7 @@ provider:
     PROJECT_NAME: adamhingoro-sls-app
     TODOS_TABLE: adamhingoro-serverless-app-${self:provider.stage}
     S3_BUCKET_NAME: adamhingoro-serverless-app-${self:provider.stage}
+    OAUTH_CLIENT_SECRET: vVQjq68cEs6vLtjklDZlZwGv7-7ePwYIg0adleQqkabTuWKKXbExt8EP6_lWwgwM
 
 functions:
 
@@ -140,6 +143,3 @@ resources:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
         ValidateRequestParameters: false
-        ResponseParameters:
-           gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
