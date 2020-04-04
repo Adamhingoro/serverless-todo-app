@@ -1,13 +1,23 @@
 import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
+import { TodoResource } from '../../resources/TodoResource';
+const todoResource = new TodoResource();
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const todoId = event.pathParameters.todoId
-  console.log(todoId);
   // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
-  return  {
-    statusCode:200,
-    body:"This is Generate Uplaod URL",
-   };
+  console.log("Processing Event ", event);
+  const todoId = event.pathParameters.todoId;
+
+  const URL = await todoResource.generateUploadUrl(todoId);
+
+  return {
+      statusCode: 200,
+      headers: {
+          "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+          uploadUrl: URL,
+      })
+  };
 }
