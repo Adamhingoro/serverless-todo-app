@@ -140,3 +140,6 @@ resources:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
         ValidateRequestParameters: false
+        ResponseParameters:
+           gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"

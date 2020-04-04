@@ -14,11 +14,12 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     const userId = parseUserId(jwtToken);
     const toDos = await todoResource.getAllToDo(userId);
-    
+
     return {
         statusCode: 200,
         headers: {
             "Access-Control-Allow-Origin": "*",
+            'Access-Control-Allow-Credentials': true,
         },
         body: JSON.stringify({
             "items": toDos,
