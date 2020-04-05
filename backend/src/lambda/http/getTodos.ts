@@ -1,9 +1,7 @@
 import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { parseUserId } from '../../auth/utils';
-import { TodoResource } from '../../resources/TodoResource';
-const todoResource = new TodoResource();
+import { getAllToDo } from '../../businessLogic/Todo';
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user
@@ -12,8 +10,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const split = authorization.split(' ');
     const jwtToken = split[1];
 
-    const userId = parseUserId(jwtToken);
-    const toDos = await todoResource.getAllToDo(userId);
+    const toDos = await getAllToDo(jwtToken);
 
     return {
         statusCode: 200,

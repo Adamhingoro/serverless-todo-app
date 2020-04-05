@@ -3,10 +3,7 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
-import { parseUserId } from '../../auth/utils';
-import { TodoResource } from '../../resources/TodoResource';
-const todoResource = new TodoResource();
-const uuidv4 = require('uuid/v4');
+import { createToDo } from '../../businessLogic/Todo';
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Implement creating a new TODO item
@@ -16,14 +13,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const jwtToken = split[1];
 
   const newTodo: CreateTodoRequest = JSON.parse(event.body);
-  const userId = parseUserId(jwtToken);
-  const toDoItem = await todoResource.createToDo({
-        userId: userId,
-        todoId: uuidv4(),
-        createdAt: new Date().getTime().toString(),
-        done: false,
-        ...newTodo,
-    });
+  const toDoItem = await createToDo(newTodo, jwtToken);
 
   return {
       statusCode: 201,
