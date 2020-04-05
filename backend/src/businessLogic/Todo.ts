@@ -27,8 +27,9 @@ export function deleteToDo(todoId: string, jwtToken: string): Promise<string> {
 }
 
 // Generating the signed URL for the S3 bucket
-export function generateUploadUrl(todoId: string): Promise<string> {
-    return todoResource.generateUploadUrl(todoId);
+export function generateUploadUrl(todoId: string , jwtToken: string): Promise<string> {
+    const userId = parseUserId(jwtToken);
+    return todoResource.generateUploadUrl(todoId , userId);
 }
 
 // Create TODO

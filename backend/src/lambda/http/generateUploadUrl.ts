@@ -7,8 +7,11 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
   console.log("Processing Event ", event);
   const todoId = event.pathParameters.todoId;
+  const authorization = event.headers.Authorization;
+  const split = authorization.split(' ');
+  const jwtToken = split[1];
 
-  const URL = await generateUploadUrl(todoId);
+  const URL = await generateUploadUrl(todoId , jwtToken);
 
   return {
       statusCode: 200,

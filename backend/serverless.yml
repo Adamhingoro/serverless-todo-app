@@ -19,6 +19,8 @@ provider:
     TODOS_TABLE: adamhingoro-serverless-app-${self:provider.stage}
     S3_BUCKET_NAME: adamhingoro-serverless-app-${self:provider.stage}
     OAUTH_CLIENT_SECRET: vVQjq68cEs6vLtjklDZlZwGv7-7ePwYIg0adleQqkabTuWKKXbExt8EP6_lWwgwM
+  # Enabling X-Ray tracing. 
+  tracing: true
 
 functions:
 
@@ -103,7 +105,10 @@ functions:
       - Effect: Allow
         Action:
           - s3:*
-        Resource: arn:aws:s3:::${self:provider.environment.S3_BUCKET_NAME}/*
+          - dynamodb:*
+        Resource: 
+          - arn:aws:s3:::${self:provider.environment.S3_BUCKET_NAME}/*
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 resources:
   Resources:
@@ -135,6 +140,18 @@ resources:
               AllowedMethods:
                 - PUT
               MaxAge: 300
+    AttachmentsBucketAllowPublicReadPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref AttachmentsBucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement: 
+            - Effect: Allow
+              Action: 
+                - "s3:GetObject"
+              Resource: arn:aws:s3:::${self:provider.environment.S3_BUCKET_NAME}/*
+              Principal: "*"
     onlyBody:
       Type: "AWS::ApiGateway::RequestValidator"
       Properties:
